@@ -105,6 +105,8 @@ Roadmap
 =======
 
 * Comparisons and other operators
+* add ConversionError and propogate it through the code to catch problems
+* scaledmeasurement <op> scaledmeasurement code path
 * Single vs plural units, unit abbreviations
 * Add more unit types (volume, area)
 * Add compound units and multi-unit math

@@ -15,30 +15,31 @@ seconds = Time(
     unit = 'second',
     toBaseUnit = 1.0,
     fromBaseUnit = 1.0,
-    suffixSingle = 'seconds',
-    suffixPlural = 'seconds'
+    suffixes = ('second', 'seconds')
 )
 
 minutes = Time(
     unit = 'minute',
     toBaseUnit = 60.0,
     fromBaseUnit = 0.0166666667,
-    suffixSingle = 'minute',
-    suffixPlural = 'minutes'
+    suffixes = ('minute', 'minutes')
 )
 
 hours = Time(
     unit = 'hour',
     toBaseUnit = 3600.0,
     fromBaseUnit = 0.000277777778,
-    suffixSingle = 'hour',
-    suffixPlural = 'hours'
+    suffixes = ('hour', 'hours')
 )
 
 days = Time(
     unit = 'day',
     toBaseUnit = 86400.0,
     fromBaseUnit = 0.000011574074074,
-    suffixSingle = 'day',
-    suffixPlural = 'days'
+    suffixes = ('day', 'days')
 )
+
+days.setSequenceUnits(down = hours)
+hours.setSequenceUnits(up = days, down = minutes)
+minutes.setSequenceUnits(up = hours, down = seconds)
+seconds.setSequenceUnits(up = minutes)

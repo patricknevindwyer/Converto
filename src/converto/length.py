@@ -30,46 +30,47 @@ miles = Length(
     unit = 'mile',
     toBaseUnit = 1609.344,
     fromBaseUnit = 0.000621371192,
-    suffixSingle = 'mile',
-    suffixPlural = 'miles'
+    suffixes = ('mile', 'miles')
 )
 
 feet = Length(
     unit = 'foot',
     toBaseUnit = 0.3048,
     fromBaseUnit = 3.2808399,
-    suffixSingle = 'foot',
-    suffixPlural = 'feet' 
+    suffixes = ('foot','feet') 
 )
+
+miles.setSequenceUnits(down = feet)
+feet.setSequenceUnits(up = miles)
 
 kilometers = Length(
     unit = 'kilometer',
     toBaseUnit = 1000.0,
     fromBaseUnit = 0.001,
-    suffixSingle = 'kilometer',
-    suffixPlural = 'kilometers'
+    suffixes = ('kilometer', 'kilometers')
 )
 
 meters = Length(
     unit = 'meter',
     toBaseUnit = 1.0,
     fromBaseUnit = 1.0,
-    suffixSingle = 'meter',
-    suffixPlural = 'meters'
+    suffixes = ('meter', 'meters')
 )
 
 centimeters = Length(
     unit = 'centimeter',
     toBaseUnit = 0.01,
     fromBaseUnit = 100.0,
-    suffixSingle = 'centimeter',
-    suffixPlural = 'centimeters'
+    suffixes = ('centimeter', 'centimeters')
 )
+
+kilometers.setSequenceUnits(down = meters)
+meters.setSequenceUnits(up = kilometers, down = centimeters)
+centimeters.setSequenceUnits(up = meters)
 
 furlongs = Length(
     unit = 'furlong',
     toBaseUnit = 201.16800,
     fromBaseUnit = 0.00497096954,
-    suffixSingle = 'furlong',
-    suffixPlural = 'furlongs'
+    suffixes = ('furlong', 'furlongs')
 )

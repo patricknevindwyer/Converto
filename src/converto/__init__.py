@@ -58,7 +58,7 @@ class CompoundMeasurement(object):
             numerator = self.measurements[0]
             
             return numerator.reconstruct(copy = numerator, scale = numerator.scale * (other.scale * other.fromBaseUnit))
-        
+
 class Measurement(object):
     """
     Description of a measurement.
@@ -87,21 +87,35 @@ class Measurement(object):
             copy = kwargs['copy']
             self.toBaseUnit = copy.toBaseUnit
             self.fromBaseUnit = copy.fromBaseUnit
-            self.suffixSingle = copy.suffixSingle
-            self.suffixPlural = copy.suffixPlural
-            self.unit = copy.unit            
-            self.scale = kwargs['scale']
-            
+            self.suffixes = copy.suffixes
+            self.unit = copy.unit  
+            if 'scale' in kwargs:          
+                self.scale = kwargs['scale']
+            else:
+                self.scale = copy.scale
+                
+            self.sequenceUnits = copy.sequenceUnits
             
         else:
             # create a new length object
             self.toBaseUnit = kwargs['toBaseUnit']
             self.fromBaseUnit = kwargs['fromBaseUnit']
-            self.suffixSingle = kwargs['suffixSingle']
-            self.suffixPlural = kwargs['suffixPlural']
+            self.suffixes = kwargs['suffixes']
             self.unit = kwargs['unit']
             self.scale = None
+            self.sequenceUnits = {'up': None, 'down': None}
+            
     
+    def setSequenceUnits(self, **kwargs):
+        """
+        Set the sequence units for this measurement corresponding to a shift up
+        or down the unit granularity.
+        """
+        parts = ['up', 'down']
+        for part in parts:
+            if part in kwargs:
+                self.sequenceUnits[part] = kwargs[part]
+
     def __str__(self):
         
         if self.scale is None:
@@ -109,10 +123,10 @@ class Measurement(object):
         else:
             
             displayScale = self.scale * self.fromBaseUnit
-            suffix = self.suffixPlural
+            suffix = self.suffixes[-1]
             
             if self.scale == 1.0 or self.scale == -1.0:
-                suffix = self.suffixSingle
+                suffix = self.suffixes[0]
                 
             return "%0.2f %s" % (displayScale, suffix)
     
@@ -137,6 +151,90 @@ class Measurement(object):
             return self.scale * self.fromBaseUnit
         else:
             raise AttributeError
+        
+    """
+    SHIFTING
+        
+        Shifting causes a unit change within the sequence spectrum
+    """
+    
+    def __lshift__(self, other):
+        """
+        Shift our Measurement Unit the given distance along it's sequence, using a unit iteration. This function
+        captures the following literate syntax:
+            
+            l = 400 * meters
+            l = l << 1
+            
+        Here we're jumping up one unit of distance to kilometers. If a unit of the sequence
+        doesn't exist, say:
+            
+            l = 100 * meters
+            l = l << 10
+            
+        Then we return the last plausible unit in the sequence.
+        """
+        
+        if type(other) == types.IntType:
+            
+            # sanity check
+            if other == 0:
+                return self
+            
+            # start it up
+            resMeasurement = self.reconstruct(copy=self)
+            
+            for shift in range(0, other):
+                
+                # stop when we can't shift up any higher
+                if resMeasurement.sequenceUnits['up'] is None:
+                    break
+                
+                # shift to the next unit
+                resMeasurement = self.reconstruct(copy = resMeasurement.sequenceUnits['up'], scale = self.scale)
+            
+            return resMeasurement
+        else:
+            return None
+    
+    def __rshift__(self, other):
+        """
+        Shift our Measurement Unit the given distance along it's sequence, using a unit iteration. This function
+        captures the following literate syntax:
+            
+            l = 1 * kilometers
+            l = l >> 1
+            
+        Here we're jumping down one unit of distance to meters. If a unit of the sequence
+        doesn't exist, say:
+            
+            l = 100 * feet
+            l = l >> 10
+            
+        Then we return the last plausible unit in the sequence.
+        """
+        if type(other) == types.IntType:
+            
+            # sanity check
+            if other == 0:
+                return self
+            
+            # start it up
+            resMeasurement = self.reconstruct(copy=self)
+            
+            for shift in range(0, other):
+                
+                # stop when we can't shift up any higher
+                if resMeasurement.sequenceUnits['down'] is None:
+                    break
+                
+                # shift to the next unit
+                resMeasurement = self.reconstruct(copy = resMeasurement.sequenceUnits['down'], scale = self.scale)
+            
+            return resMeasurement
+        else:
+            return None
+    
     """
     DIVISION
     
