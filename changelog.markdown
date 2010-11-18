@@ -11,3 +11,5 @@ _2010.11.18_
 		
 		# convert to feet
 		(3 * miles) >> 1
+
+*	Added __storage__ measurements for SI and IEC prefixes, up to yotta/yobi bytes

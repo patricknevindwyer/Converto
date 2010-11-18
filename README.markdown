@@ -33,7 +33,7 @@ In it's current rudimentary form Converto supports the following units:
 	-	miles
 	-	feet
 	-	furlongs
-	-	Standard SI prefixes, from yoctometers (10 ^ -24) to yottameters (10 ^ 24)
+	-	Standard [SI prefixes](http://en.wikipedia.org/wiki/Metre#SI_prefixed_forms_of_metre "SI Prefixes"), from yoctometers (10 ^ -24) to yottameters (10 ^ 24)
 
 *	Time
 	-	seconds
@@ -113,6 +113,16 @@ micrometer > nanometer) not 9 (1 nanometer is 10 ^ -9 meters)
 	# convert to nanometers
 	nm = d >> 5
 	
+Determine actual storage of a 1 terabyte harddrive:
+	
+	from converto.storage import *
+	
+	size = 1 * terabytes
+	actual = size * tebibytes
+	
+	# 0.91 TiB
+	print actual
+	
 Roadmap
 =======
 
@@ -125,7 +135,6 @@ Roadmap
 *	Examples, syntax changes
 *	Add other measurement units
 	*	volume
-	*	storage (-i -a units)
 	*	area
 	*	temperature (requires formulaic, non-linear conversions)
 
