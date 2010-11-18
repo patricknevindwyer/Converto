@@ -29,18 +29,19 @@ Conversions
 
 In it's current rudimentary form Converto supports the following units:
 
-* Length
-** miles
-** feet
-** kilometers
-** meters
-** centimeters
-** furlongs
-* Time
-** seconds
-** minutes
-** hours
-** days
+**Length**
+* miles
+* feet
+* kilometers
+* meters
+* centimeters
+* furlongs
+
+**Time**
+* seconds
+* minutes
+* hours
+* days
 
 
 Examples
