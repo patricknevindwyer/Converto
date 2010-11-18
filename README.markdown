@@ -32,10 +32,8 @@ In it's current rudimentary form Converto supports the following units:
 *	Length
 	-	miles
 	-	feet
-	-	kilometers
-	-	meters
-	-	centimeters
 	-	furlongs
+	-	Standard SI prefixes, from yoctometers (10 ^ -24) to yottameters (10 ^ 24)
 
 *	Time
 	-	seconds
@@ -101,16 +99,33 @@ Basic measurement math
 	# 0.67 feet
 	print s
 	
+Shift between common measurements. The number shifted is not directly related to scale, but to the common sequence
+of units. Hence, shifting from _meters_ to _nanometers_ is 5 steps (meter > decimeter > centimeter > millimeter >
+micrometer > nanometer) not 9 (1 nanometer is 10 ^ -9 meters)
+	
+	from converto.length import *
+	
+	d = 5 * meters
+	
+	# convert to kilometers
+	km = d << 3
+	
+	# convert to nanometers
+	nm = d >> 5
+	
 Roadmap
 =======
 
-* Comparisons and other operators
-* add ConversionError and propogate it through the code to catch problems
-* scaledmeasurement <op> scaledmeasurement code path
-* Single vs plural units, unit abbreviations
-* Add more unit types (volume, area)
-* Add compound units and multi-unit math
-* Add chained units (convert a length into miles _and_ feet, or a time into days, hours, minutes, and seconds)
-* Examples, syntax changes
-
+*	Comparisons and other operators
+*	add ConversionError and propogate it through the code to catch problems
+*	scaledmeasurement <op> scaledmeasurement code path
+*	Single vs plural units, unit abbreviations
+*	Add compound units and multi-unit math
+*	Add chained units (convert a length into miles _and_ feet, or a time into days, hours, minutes, and seconds)
+*	Examples, syntax changes
+*	Add other measurement units
+	*	volume
+	*	storage (-i -a units)
+	*	area
+	*	temperature (requires formulaic, non-linear conversions)
 
