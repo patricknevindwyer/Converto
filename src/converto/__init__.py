@@ -88,7 +88,6 @@ class Measurement(object):
             self.toBaseUnit = copy.toBaseUnit
             self.fromBaseUnit = copy.fromBaseUnit
             self.suffixes = copy.suffixes
-            self.unit = copy.unit  
             if 'scale' in kwargs:          
                 self.scale = kwargs['scale']
             else:
@@ -101,7 +100,6 @@ class Measurement(object):
             self.toBaseUnit = kwargs['toBaseUnit']
             self.fromBaseUnit = kwargs['fromBaseUnit']
             self.suffixes = kwargs['suffixes']
-            self.unit = kwargs['unit']
             self.scale = None
             self.sequenceUnits = {'up': None, 'down': None}
             
