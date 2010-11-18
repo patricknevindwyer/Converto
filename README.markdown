@@ -41,7 +41,10 @@ In it's current rudimentary form Converto supports the following units:
 	-	hours
 	-	days
 
-
+*	Storage
+	-	SI prefixes (kilo, mega, giga, tera, peta, exa, zetta, yotta)
+	-	IEC prefixes (kibi, mebi, gibi, tebi, pebi, exbi, zebi, yobi)
+	 
 Examples
 ========
 
