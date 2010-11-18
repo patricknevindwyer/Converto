@@ -58,6 +58,14 @@ meters = Length(
     suffixPlural = 'meters'
 )
 
+centimeters = Length(
+    unit = 'centimeter',
+    toBaseUnit = 0.01,
+    fromBaseUnit = 100.0,
+    suffixSingle = 'centimeter',
+    suffixPlural = 'centimeters'
+)
+
 furlongs = Length(
     unit = 'furlong',
     toBaseUnit = 201.16800,

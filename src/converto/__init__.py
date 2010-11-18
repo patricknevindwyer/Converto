@@ -117,9 +117,26 @@ class Measurement(object):
             return "%0.2f %s" % (displayScale, suffix)
     
     def reconstruct(self, *kargs, **kwargs):
-        print self.__class__
         return self.__class__(*kargs, **kwargs)
     
+    """
+    SCALE LOOKUP
+    
+        These methods capture scale lookup and other basic metadata inquiry. 
+    """
+    def __len__(self):
+        """
+        Return the scaled size in this unit type. This isn't the preferred method
+        of retrieving the scale of this measurement, as it rounds all values to
+        integers
+        """
+        return self.scale * self.fromBaseUnit
+    
+    def __getattr__(self, name):
+        if name == 'size':
+            return self.scale * self.fromBaseUnit
+        else:
+            raise AttributeError
     """
     DIVISION
     
