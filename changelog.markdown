@@ -4,7 +4,8 @@ Changes
 =======
 _2010.11.19_
 
-*	Add [Temperature](http://en.wikipedia.org/wiki/Temperature) measurements
+*	Added rich comparisons to all Measurement types
+*	Added [Temperature](http://en.wikipedia.org/wiki/Temperature) measurements
 *	Modified Measurement class to use numeric literal OR functions for base/local scale conversions
 
 _2010.11.18_

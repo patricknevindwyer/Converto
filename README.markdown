@@ -23,6 +23,14 @@ Or to work with time using sane combinations:
 	elapsedSeconds = 1000000
 	elapsedDays = elapsedSeconds * seconds * days
 	
+Converto can also help avoid mistakes when mixing different units in the same code:
+	
+	# compare the different distances we collected
+	k = 15 * kilometers
+	m = 10 * miles
+	
+	if m > k:
+		# do something
 	
 Conversions
 ===========
@@ -67,6 +75,16 @@ Create a basic measurement
 	# 5.00 miles
 	print d
 
+Compare measurements in different units
+	
+	from converto.length import miles, kilometers
+	
+	m = 10 * miles
+	k = 15 * kilometers
+	
+	if m > k:
+		print "That's a lot of miles"
+	
 Modify a measurement
 	
 	from converto.time import *
@@ -139,7 +157,7 @@ Determine actual storage of a 1 terabyte harddrive:
 Roadmap
 =======
 
-*	Comparisons and other operators
+*	other operators
 *	add ConversionError and propogate it through the code to catch problems
 *	scaledmeasurement <op> scaledmeasurement code path
 *	Single vs plural units, unit abbreviations
