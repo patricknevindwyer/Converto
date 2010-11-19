@@ -8,6 +8,14 @@ class ConversionError(Exception):
     def __str__(self):
         return self.msg
     
+class MeasurementError(Exception):
+    
+    def __init__(self, msg):
+        self.msg = msg
+    
+    def __str_(self):
+        return self.msg
+    
 class CompoundMeasurement(object):
     """
     A compound measurement using multiple units, for instance 5 miles / hour. Certain combinations
@@ -138,6 +146,60 @@ class Measurement(object):
     
     def reconstruct(self, *kargs, **kwargs):
         return self.__class__(*kargs, **kwargs)
+    
+    """
+    COMPARISONS
+        
+        Comparators using the base unit. None-comparable units will generate a MeasurementError.
+    """
+    def __typeCompare(self, other):
+        """
+        Basic class comparison. This throws a MeasurementError if the two classes are not compatible.
+        """
+        if not isinstance(other, self.__class__):
+            raise MeasurementError("Objects are not of compatible Measurement type")
+    
+    def __lt__(self, other):
+        """
+        self < other
+        """
+        self.__typeCompare(other)
+        return self.scale < other.scale
+    
+    def __le__(self, other):
+        """
+        self <= other
+        """
+        self.__typeCompare(other)
+        return self.scale <= other.scale
+    
+    def __gt__(self, other):
+        """
+        self > other
+        """
+        self.__typeCompare(other)
+        return self.scale > other.scale
+    
+    def __ge__(self, other):
+        """
+        self >= other
+        """
+        self.__typeCompare(other)
+        return self.scale >= other.scale
+
+    def __eq__(self, other):
+        """
+        self == other
+        """
+        self.__typeCompare(other)
+        return self.scale == other.scale
+
+    def __ne__(self, other):
+        """
+        self != other
+        """
+        self.__typeCompare(other)
+        return self.scale != other.scale
     
     """
     COMMON BASE CONVERSION
