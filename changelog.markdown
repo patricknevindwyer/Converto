@@ -2,6 +2,11 @@ This changelog is an approximate catalog of syntax changes, new features, and bu
 
 Changes
 =======
+_2010.11.19_
+
+*	Add [Temperature](http://en.wikipedia.org/wiki/Temperature) measurements
+*	Modified Measurement class to use numeric literal OR functions for base/local scale conversions
+
 _2010.11.18_
 	
 *	Added left and right shifting support for left hand operands:

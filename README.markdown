@@ -44,6 +44,16 @@ In it's current rudimentary form Converto supports the following units:
 *	[Storage](http://en.wikipedia.org/wiki/Byte#Unit_symbol_or_abbreviation "Byte Multiples")
 	-	SI prefixes (kilo, mega, giga, tera, peta, exa, zetta, yotta)
 	-	IEC prefixes (kibi, mebi, gibi, tebi, pebi, exbi, zebi, yobi)
+	
+*	[Temperature](http://en.wikipedia.org/wiki/Temperature "Temperature")
+	-	Fahrenheit
+	-	Celsius
+	-	Kelvin
+	-	Rankine
+	-	Delisle
+	-	Newton
+	-	Reaumur
+	-	Romer
 	 
 Examples
 ========
@@ -139,5 +149,3 @@ Roadmap
 *	Add other measurement units
 	*	volume
 	*	area
-	*	temperature (requires formulaic, non-linear conversions)
-

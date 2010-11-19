@@ -128,7 +128,7 @@ class Measurement(object):
             return self.suffixPlural
         else:
             
-            displayScale = self.scale * self.fromBaseUnit
+            displayScale = self.toLocal()
             suffix = self.suffixes[-1]
             
             if self.scale == 1.0 or self.scale == -1.0:
@@ -194,11 +194,11 @@ class Measurement(object):
         of retrieving the scale of this measurement, as it rounds all values to
         integers
         """
-        return self.scale * self.fromBaseUnit
+        return self.toLocal()
     
     def __getattr__(self, name):
         if name == 'size':
-            return self.scale * self.fromBaseUnit
+            return self.toLocal()
         else:
             raise AttributeError
         
