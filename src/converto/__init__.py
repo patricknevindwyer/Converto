@@ -1,5 +1,13 @@
 import types
 
+class ConversionError(Exception):
+    
+    def __init__(self, msg):
+        self.msg = msg
+    
+    def __str__(self):
+        return self.msg
+    
 class CompoundMeasurement(object):
     """
     A compound measurement using multiple units, for instance 5 miles / hour. Certain combinations
@@ -132,6 +140,50 @@ class Measurement(object):
         return self.__class__(*kargs, **kwargs)
     
     """
+    COMMON BASE CONVERSION
+        
+        These methods are used when converting values to and from the base unit. The conversion method can be a number or
+        a function.
+    """
+    def toLocal(self, scale=None):
+        """
+        Convert the scale value to the local measurement scale. The fromBaseUnit value can be a literal
+        or a function. If the scale value is not directly specified the self.scale value is used.
+        """
+        
+        # determine our conversion base number
+        toVal = scale
+        if toVal is None:
+            toVal = self.scale
+            
+        # determine the conversion method
+        if type(self.fromBaseUnit) == types.FunctionType:
+            return self.fromBaseUnit(toVal)
+        elif type(self.fromBaseUnit) == types.FloatType:
+            return toVal * self.fromBaseUnit
+        else:
+            raise ConversionError("Invalid type specified for converting from the base unit (%s): %s" % (",".join(self.suffixes), type(self.fromBaseUnit)))
+    
+    def toBase(self, scale=None):
+        """
+        Convert the scale value to the base measurement unit. The toBaseUnit value can be a literal
+        or a function. If the scale value is not directly specified the self.scale value is used.
+        """
+        
+        # determine our conversion base number
+        fromVal = scale
+        if fromVal is None:
+            fromVal = self.scale
+        
+        # determine the conversion method
+        if type(self.toBaseUnit) == types.FunctionType:
+            return self.toBaseUnit(fromVal)
+        elif type(self.toBaseUnit) == types.FloatType:
+            return fromVal * self.toBaseUnit
+        else:
+            raise ConversionError("Invalid type specified for converting to the base unit (%s): %s" % (",".join(self.suffixes), type(self.toBaseUnit)))
+    
+    """
     SCALE LOOKUP
     
         These methods capture scale lookup and other basic metadata inquiry. 
@@ -258,10 +310,10 @@ class Measurement(object):
         if type(other) == types.IntType or type(other) == types.FloatType:
             if self.scale is None:
                 # create new scaled measurement
-                return self.reconstruct(copy = self, scale = other * self.toBaseUnit)
+                return self.reconstruct(copy = self, scale = self.toBase(other))
             else:
                 # modify existing scaled measurement
-                return self.reconstruct(copy = self, scale = ((self.scale * self.fromBaseUnit) / other) * self.toBaseUnit)
+                return self.reconstruct(copy = self, scale =  self.toBase(self.toLocal() / other) )
         else:
             
             if isinstance(other, self.__class__) and self.scale is not None and other.scale is not None:
@@ -305,7 +357,7 @@ class Measurement(object):
         """
         
         if type(other) == types.IntType or type(other) == types.FloatType:
-            return self.reconstruct(copy = self, scale = ((self.scale * self.fromBaseUnit) - other) * self.toBaseUnit)
+            return self.reconstruct(copy = self, scale = self.toBase(self.toLocal() - other) )
         else:
             
             if isinstance(other, self.__class__) and self.scale is not None and other.scale is not None:
@@ -332,7 +384,7 @@ class Measurement(object):
         if type(other) == types.IntType or type(other) == types.FloatType:
             
             # add length of the current base type
-            return self.reconstruct(copy = self, scale = ((self.scale * self.fromBaseUnit) + other) * self.toBaseUnit)
+            return self.reconstruct(copy = self, scale = self.toBase(self.toLocal() + other))
         else:
             
             if isinstance(other, self.__class__) and self.scale is not None and other.scale is not None:
@@ -367,11 +419,11 @@ class Measurement(object):
             
             if self.scale is None:
                 # creating a new scaled measurement
-                return self.reconstruct(copy = self, scale = float(other) * self.toBaseUnit)
+                return self.reconstruct(copy = self, scale = self.toBase(float(other)))
             else:
                 # actual measurement multiplication. All measurement math happens in
                 # the local unit scale
-                return self.reconstruct(copy = self, scale = (self.scale * self.fromBaseUnit * other) * self.toBaseUnit)
+                return self.reconstruct(copy = self, scale = self.toBase(self.toLocal() * other) )
             
         else:
             if isinstance(other, self.__class__) and other.scale == None and self.scale is not None:
