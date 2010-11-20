@@ -90,8 +90,6 @@ class Measurement(object):
         multiplied, and then stored again in the base type. This keeps with the
         semantic meaning of the current unit, and avoids mathematical gaffes.
         
-    TODO: Add unit and unit relations
-    TODO: group suffix into a dict with short/long single/plural
     TODO: fix the op and rop methods to not point to the same code (rop will have different semantics)
     TODO: Throw exceptions for unsupport ops
     """
@@ -146,6 +144,22 @@ class Measurement(object):
     
     def reconstruct(self, *kargs, **kwargs):
         return self.__class__(*kargs, **kwargs)
+    
+    """
+    Dimensional Conversion methods. Each subclass of Measurement can define how to combine
+    different scaled measurements into new objects. For instance, the Length class defines
+    how two Lengths combine into an Area. The Area class defines how Area and Length combine
+    into Volume.
+    
+    If a class does not define a means of combining two measurements, it can return None to
+    trigger a ConversionError. Likewise, if a class has no means of dimensionally shifting
+    values, it can skip these methods all together.
+    """
+    def dimensional_mul(self, other):
+        raise ConversionError("%s doesn't support dimensional multiplication" % (self.__class__))
+    
+    def dimensional_pow(self, other):
+        raise ConversionError("%s doesn't support dimensional exponentiation" % (self.__class__))
     
     """
     COMPARISONS
@@ -494,3 +508,10 @@ class Measurement(object):
             elif isinstance(other, self.__class__) and other.scale is not None and self.scale is None:
                 # this is a scale conversion using the other scale and our base type
                 return self.reconstruct(copy = self, scale = other.scale)
+            elif other.scale is not None and self.scale is not None:
+                # unit combination and dimensional increase
+                retVal = self.dimensional_mul(other)
+                if retVal is None:
+                    raise ConversionError( "Invalid dimensional multiplication between %s and %s" % (self.__class__, other.__class__) )
+                else:
+                    return retVal

@@ -62,7 +62,11 @@ In it's current rudimentary form Converto supports the following units:
 	-	Newton
 	-	Reaumur
 	-	Romer
-	 
+	
+*	Area
+	-	square_meters
+	-	square_feet
+	
 Examples
 ========
 
@@ -154,16 +158,45 @@ Determine actual storage of a 1 terabyte harddrive:
 	# 0.91 TiB
 	print actual
 	
+Move between measurement dimensions:
+	
+	# determine size of an area by it's lengths
+	w = 1 * furlongs
+	h = 23 * centimeters
+	
+	# determine the size in square feet (498.03 square feet)
+	a = (w * h) * square_feet
+	
 Roadmap
 =======
 
+*	add __pow__ method to Measurements
+	*	add dimensional_pow to Measurements
+*	Volume Measurement
+	* dimensional_* for Length, Area, and Volume relationships
+*	Add other dimensional shifts
+	*	division
+	*	roots
+*	Measurement relationships
+	* 	area x length == volume
+	*	distance x time == speed
+	*	speed x time == acceleration
+	*	length and exponents
+*	unit tests
 *	other operators
+	*	indexing as conversion/mapping
+	*	and/or/xor
+	*	power
+	*	i* ops (iadd, isub, etc)
+	*	divmod
+	*	binary ops
+	*	hash
+	*	repr
+	*	slicing
 *	add ConversionError and propogate it through the code to catch problems
 *	scaledmeasurement <op> scaledmeasurement code path
 *	Single vs plural units, unit abbreviations
-*	Add compound units and multi-unit math
+*	Add compound units and multi-unit math via dimensional relationships
 *	Add chained units (convert a length into miles _and_ feet, or a time into days, hours, minutes, and seconds)
 *	Examples, syntax changes
 *	Add other measurement units
-	*	volume
-	*	area

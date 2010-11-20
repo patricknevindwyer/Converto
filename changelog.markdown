@@ -2,6 +2,11 @@ This changelog is an approximate catalog of syntax changes, new features, and bu
 
 Changes
 =======
+_2010.11.20_
+*	Added dimensional_mul and dimensional_pow to Measurement base class
+*	Added Area Measurement
+*	Length supports dimensional_mul to create Area
+
 _2010.11.19_
 
 *	Added rich comparisons to all Measurement types

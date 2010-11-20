@@ -4,6 +4,7 @@ Created on Nov 4, 2010
 @author: patricknevindwyer
 '''
 from converto import Measurement
+from converto.area import square_meters
 
 class Length(Measurement):
     """
@@ -22,7 +23,18 @@ class Length(Measurement):
         
     TODO: fix the op and rop methods to not point to the same code (rop will have different semantics)
     """
-    pass
+    def dimensional_mul(self, other):
+        """
+            Length * Length -> Area
+            Length * Area -> Volume
+            Length * Time -> Speed
+        """
+        
+        if isinstance(other, self.__class__):
+            # Length * Length
+            return square_meters * (self.scale * other.scale)
+        else:
+            return None
             
 ###
 # IMPERIAL UNITS
