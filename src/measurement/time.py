@@ -3,13 +3,8 @@ Created on Nov 4, 2010
 
 @author: patricknevindwyer
 '''
-from measurement import Measurement
+from measurement.bases import Time
 
-class Time(Measurement):
-    """
-    The base for Time is seconds.
-    """
-    pass
 
 seconds = Time(
     unit = 'second',

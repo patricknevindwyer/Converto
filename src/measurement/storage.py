@@ -3,25 +3,7 @@ Created on Nov 18, 2010
 
 @author: patricknevindwyer
 '''
-from measurement import Measurement
-
-class Storage(Measurement):
-    """
-    Description of computer storage. The base unit for Length is the BYTE.
-    
-    * all measurements are stored in the base unit (in this case BYTES)
-    * all measurements are stored as floats
-    * When doing operative math with Numeric arguments, the scale value is first
-        converted into the scaled type. So when doing:
-            
-            (2 * miles) * 5
-        
-        The scaled miles value (2) is converted into the local scaled type (miles)
-        multiplied, and then stored again in the base type. This keeps with the
-        semantic meaning of the current unit, and avoids mathematical gaffes.
-        
-    """
-    pass
+from measurement.bases import Storage
 
 """
 The Storage measurements incorporate both the SI decimal prefixes (measuring in powers of 10),

@@ -3,16 +3,7 @@ Created on Nov 20, 2010
 
 @author: patricknevindwyer
 '''
-from measurement import Measurement, unitCombiner
-import measurement.length
-
-class Area(Measurement):
-    """
-    Description of 2 dimensional area. The base unit for Area is the METER.
-    """
-    pass
-
-unitCombiner.register_div(Area, measurement.length.Length, measurement.length.meters)
+from measurement.bases import Area 
 
 square_meters = Area(
     toBaseUnit = 1.0,

@@ -5,10 +5,13 @@ Changes
 _2010.11.23_
 *	Created UnitCombiner class to handle dimensional conversions, rather than per-class definitions
 *	added UnitCombiner handlers
-	*	register_mul	-	commutative multiplication of units
-	*	register_div	-	non-commutative division of units
-	*	register_pow	-	exponent scaled dimensional shift
+	*	_register_mul_	-	commutative multiplication of units
+	*	_register_div_	-	non-commutative division of units
+	*	_register_pow_	-	exponent scaled dimensional shift
 *	Added test conversions for Length and Area
+*	Added measurement.bases class to contain all common measurement base types (Length, Time, etc)
+*	Refactored base Measurement classes out of measurement.(types) and into measurement.bases
+*	Removed conversion test cases
 
 _2010.11.20_
 *	Added dimensional_mul and dimensional_pow to Measurement base class

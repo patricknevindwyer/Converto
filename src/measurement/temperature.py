@@ -3,17 +3,7 @@ Created on Nov 19, 2010
 
 @author: patricknevindwyer
 '''
-from measurement import Measurement
-
-class Temperature(Measurement):
-    """
-    Description of temperature. The base unit for Length is Kelvin.
-    
-    * all measurements are stored in the base unit (in this case degrees Kelvin)
-    * all measurements are stored as floats
-        
-    """
-    pass
+from measurement.bases import Temperature
 
 """
 The Temperature measurements incorporate a range of temperature types, each of which uses

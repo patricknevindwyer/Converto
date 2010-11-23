@@ -3,16 +3,7 @@ Created on Nov 4, 2010
 
 @author: patricknevindwyer
 '''
-from measurement import Measurement, unitCombiner
-from measurement.area import square_meters
-
-class Length(Measurement):
-    """
-    Description of length and distance. The base unit for Length is the METER.
-    """
-    pass
-
-unitCombiner.register_mul(Length, Length, square_meters)
+from measurement.bases import Length
          
 ###
 # IMPERIAL UNITS
