@@ -3,39 +3,17 @@ Created on Nov 4, 2010
 
 @author: patricknevindwyer
 '''
-from measurement import Measurement
+from measurement import Measurement, unitCombiner
 from measurement.area import square_meters
 
 class Length(Measurement):
     """
     Description of length and distance. The base unit for Length is the METER.
-    
-    * all measurements are stored in the base unit (in this case METERS)
-    * all measurements are stored as floats
-    * When doing operative math with Numeric arguments, the scale value is first
-        converted into the scaled type. So when doing:
-            
-            (2 * miles) * 5
-        
-        The scaled miles value (2) is converted into the local scaled type (miles)
-        multiplied, and then stored again in the base type. This keeps with the
-        semantic meaning of the current unit, and avoids mathematical gaffes.
-        
-    TODO: fix the op and rop methods to not point to the same code (rop will have different semantics)
     """
-    def dimensional_mul(self, other):
-        """
-            Length * Length -> Area
-            Length * Area -> Volume
-            Length * Time -> Speed
-        """
-        
-        if isinstance(other, self.__class__):
-            # Length * Length
-            return square_meters * (self.scale * other.scale)
-        else:
-            return None
-            
+    pass
+
+unitCombiner.register_mul(Length, Length, square_meters)
+         
 ###
 # IMPERIAL UNITS
 ###

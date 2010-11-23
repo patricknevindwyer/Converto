@@ -8,7 +8,8 @@ _2010.11.23_
 	*	register_mul	-	commutative multiplication of units
 	*	register_div	-	non-commutative division of units
 	*	register_pow	-	exponent scaled dimensional shift
-	
+*	Added test conversions for Length and Area
+
 _2010.11.20_
 *	Added dimensional_mul and dimensional_pow to Measurement base class
 *	Added Area Measurement

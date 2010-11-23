@@ -1,4 +1,22 @@
 import types
+"""
+
+Rearrangement:
+
+    measurement.bases
+        -> all of the base unit types (Length, Time, etc)
+    measurement.conversions
+        -> how all of the base units relate
+    measurement.(length | time | area | whatever).(si | imperial | fantasy | esoteric | whatever)
+        -> instantiations of units
+        
+    measurement
+        -> imports (in order)
+        -> bases, conversions
+    
+    by hand import of instantiated units
+"""
+
 
 class ConversionError(Exception):
     
@@ -21,7 +39,9 @@ class UnitCombiner(object):
     The UnitCombiner class stores logic and class based patterns for how different unit
     types combine together through various operations to form new units. This logic is
     used by the base Measurement class to determine when and how to combine units of different
-    types.
+    types. When defining a unit combination the result is always stated as the base unit
+    of the given Measurement. So, for instance, when creating a Length, the result class
+    is always _square_meters_, which is the base measurement unit for Length.
     
     An instance of UnitCombiner is bound to the measurement.* namespace, such that all unit
     combinations can be registered to a common instance:
@@ -30,28 +50,28 @@ class UnitCombiner(object):
         
         # This combination is now available to any measurements and code that reference
         # the measurement package
-        uc.register_mul(Length, Length, Area)
+        uc.register_mul(Length, Length, square_meters)
         
     Class information can be used to define new patterns and combinations at will; these patterns
     will hold true for all instances and variations of the classes. So, for instance, the Length
     base class could define:
     
-        unitCombiner.register_mul(Length, Length, Area)
-        unitCombiner.register_mul(Length, Area, Volume)
+        unitCombiner.register_mul(Length, Length, square_meters)
+        unitCombiner.register_mul(Length, Area, cubic_meters)
         
     These two definitions make it possible to dimensionally shift a length into an Area (1d to 2d),
     and multiple Lengths or a Length and an Area into a Volume (1d x3 or 1d x 2d to 3d). The multiplication
     definitions are commutative, so the following two definitions are redundant:
         
-        unitCombiner.register_mul(Length, Area, Volume)
-        unitCombiner.register_mul(Area, Length, Volume)
+        unitCombiner.register_mul(Length, Area, cubic_meters)
+        unitCombiner.register_mul(Area, Length, cubic_meters)
     
     When determining how to combine to types, the multiplication code searches both combinations to find
     and appropriate pattern.
     
     The division definitions are non-commutative, so the following definition:
         
-        unitCombiner.register_div(Area, Length, Length)
+        unitCombiner.register_div(Area, Length, meters)
     
     defines how to divide an Area by a Length to create a Length. This pattern does not apply when dividing
     a Length by an Area (no applicable unit).
@@ -59,15 +79,15 @@ class UnitCombiner(object):
     The exponentiation logic (*_pow) defines patterns for raising units to different powers. Each base type
     can be given any number of distinct valid powers:
     
-        unitCombiner.register_pow(Length, 2, Area)
-        unitCombiner.register_pow(Length, 3, Volume)
+        unitCombiner.register_pow(Length, 2, square_meters)
+        unitCombiner.register_pow(Length, 3, cubic_meters)
     """
     def __init__(self):
         self._dim_mul = {}
         self._dim_pow = {}
         self._dim_div = {}
     
-    def register_mul(self, left_class, right_class, result_class):
+    def register_mul(self, left_class, right_class, result_measurement):
         """
         Create a new multiplication pattern using two base Measurement classes. Multiplication definitions
         are commutative; only a single combination of two distinct Measurement classes need be defined, the
@@ -78,9 +98,32 @@ class UnitCombiner(object):
             unitCombiner.register_mul(Length, Length, Area)
         
         """
-        pass
+        
+        unitTuple = (left_class, right_class)
+        self._dim_mul[unitTuple] = {'unit': result_measurement}
     
-    def register_div(self, lop, rop, res):
+    def compute_mul(self, left, right):
+        """
+        Given two measurement objects, find the base classes, and compute a possible return value. If no such
+        combination exists, raise an Exception.
+        """
+        
+        lcls = left.__class__
+        rcls = right.__class__
+        
+        mcls = None
+        
+        if (lcls, rcls) in self._dim_mul:
+            mcls = self._dim_mul[(lcls, rcls)]
+        elif (rcls, lcls) in self._dim_mul:
+            mcls = self._dim_mul[(rcls, lcls)]
+        
+        if mcls is None:
+            raise MeasurementError("Cannot multiply %s and %s" % (lcls, rcls))
+        else:
+            return mcls['unit'] * (left.scale * right.scale)
+    
+    def register_div(self, left_class, right_class, result_measurement):
         """
         Create a new division pattern using two base Measurement classes. Division definitions are
         non-commutative;
@@ -100,12 +143,32 @@ class UnitCombiner(object):
             # Convert a Volume to a Length by division using Area
             unitCombiner.register_div(Volume, Area, Length)
         """
-        pass
+        
+        unitTuple = (left_class, right_class)
+        self._dim_div[unitTuple] = {'unit': result_measurement}
     
-    def register_pow(self, lop, scale):
+    def compute_div(self, left, right):
         """
+        Given two measurement objects find an applicable division result. If no such result exists, raise
+        an Exception.
         """
-        pass
+        
+        unitTuple = (left.__class__, right.__class__)
+        
+        if unitTuple not in self._dim_div:
+            raise MeasurementError("Cannot divide %s by %s" % (left.__class__, right.__class__))
+        else:
+            return self._dim_div[unitTuple]['unit'] * (left.scale / right.scale)
+    
+    def register_pow(self, base_class, exponent, result_measurement):
+        """
+        Create a new exponentiation pattern tied to a specific Measurement class and literal exponent:
+            
+            unitCombiner.register_pow(Length, 2, Area)
+            unitCombiner.register_pow(Length, 3, Volume)
+        """
+        unitTuple = (base_class, exponent)
+        self._dim_pow[unitTuple] = {'unit': result_measurement}
 
 class Measurement(object):
     """
@@ -431,27 +494,11 @@ class Measurement(object):
                 return (self.scale / other.scale)
             elif self.scale is not None and other.scale is not None:
                 # create a compound unit, but we need to reduce the num/denom
-                
-                # handled by UnitCombiner singleton
-#                return CompoundMeasurement(
-#                    measurements = [
-#                        self.reconstruct(copy = self, scale = self.scale / other.scale),
-#                        other.reconstruct(copy = other, scale = 1)
-#                    ]
-#                )
-                pass
+                return unitCombiner.compute_div(self, other)
             
             elif self.scale is not None and other.scale is None:
                 
                 # handled by UnitCombiner singleton
-#                
-#                # create a simple compound unit
-#                return CompoundMeasurement(
-#                    measurements = [
-#                        self.reconstruct(copy = self, scale = self.scale),
-#                        other.reconstruct(copy = other, scale = 1)
-#                    ]
-#                )
                 pass
 
     
@@ -549,9 +596,13 @@ class Measurement(object):
                 # this is a scale conversion using the other scale and our base type
                 return self.reconstruct(copy = self, scale = other.scale)
             elif other.scale is not None and self.scale is not None:
-                # unit combination and dimensional increase
-                retVal = self.dimensional_mul(other)
-                if retVal is None:
-                    raise ConversionError( "Invalid dimensional multiplication between %s and %s" % (self.__class__, other.__class__) )
-                else:
-                    return retVal
+                
+                return unitCombiner.compute_mul(self, other)
+#                # unit combination and dimensional increase
+#                retVal = self.dimensional_mul(other)
+#                if retVal is None:
+#                    raise ConversionError( "Invalid dimensional multiplication between %s and %s" % (self.__class__, other.__class__) )
+#                else:
+#                    return retVal
+                
+unitCombiner = UnitCombiner()
