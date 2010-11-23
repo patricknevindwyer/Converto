@@ -160,6 +160,9 @@ Determine actual storage of a 1 terabyte harddrive:
 	
 Move between measurement dimensions:
 	
+	from converto.length import *
+	from converto.area import *
+	
 	# determine size of an area by it's lengths
 	w = 1 * furlongs
 	h = 23 * centimeters
@@ -182,6 +185,8 @@ Roadmap
 	*	distance x time == speed
 	*	speed x time == acceleration
 	*	length and exponents
+	*	dimensional singleton to define combinations and result base measurements, rather than per-class overloading? Both?
+		*	Transitive mul, dimensioned pow, non-transitive div
 *	unit tests
 *	other operators
 	*	indexing as conversion/mapping
@@ -200,3 +205,11 @@ Roadmap
 *	Add chained units (convert a length into miles _and_ feet, or a time into days, hours, minutes, and seconds)
 *	Examples, syntax changes
 *	Add other measurement units
+	*	improve time
+	*	force
+	*	weight
+	*	mass
+	*	speed
+	*	acceleration
+	*	pressure
+	*	torque

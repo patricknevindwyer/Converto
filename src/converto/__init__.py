@@ -15,65 +15,97 @@ class MeasurementError(Exception):
     
     def __str_(self):
         return self.msg
-    
-class CompoundMeasurement(object):
-    """
-    A compound measurement using multiple units, for instance 5 miles / hour. Certain combinations
-    of compound measurements can be done to derive new figures.
-    
-        * Compound (op) Compound
-        * Compound (op) Numeric
-        * Compound (op) Scaled Measurement
-        
-    When the compound unit is created it is always simplified to have a denominator of 1
-    
-    Example 1 - Pace to Time
-    ------------------------
-    
-    Establish a pace (time / distance):
-        
-        pace = 8 minutes / mile
-        
-    Mulitply this pace by a distance to get a time (unit cancellation):
-        
-        time = pace * 5 miles
-    
-    Time is now in minutes (simple scaled measurement):
-        
-        str(time) # 40 minutes
-        
-    Example 2 - Time to Pace
-    ------------------------
-    
-    Establish a distance and time:
-        
-        race = 5 km / 24 minutes
-    
-    Multiply this distance and time by a time and distance to get a pace
-        
-        pace = race * (minutes / mile)
-    
-    The pace is now in root units of time / distance (unit inversion):
-        
-        str(pace) # 7.### minutes / mile
-    """
-    
-    def __init__(self, *kargs, **kwargs):
-        
-        self.measurements = kwargs['measurements']
 
-    def __mul__(self, other):
-        """
-        Check for all kinds of modifications and operations that can happen
-        """
+class UnitCombiner(object):
+    """
+    The UnitCombiner class stores logic and class based patterns for how different unit
+    types combine together through various operations to form new units. This logic is
+    used by the base Measurement class to determine when and how to combine units of different
+    types.
+    
+    An instance of UnitCombiner is bound to the measurement.* namespace, such that all unit
+    combinations can be registered to a common instance:
         
-        if other.__class__ == self.measurements[-1].__class__:
-            # unit cancellation, the result of this is the scale of the other (in it's local form)
-            # times the scale of the numerator
-            print "unit cancellation"
-            numerator = self.measurements[0]
+        from measurement import unitCombiner as uc
+        
+        # This combination is now available to any measurements and code that reference
+        # the measurement package
+        uc.register_mul(Length, Length, Area)
+        
+    Class information can be used to define new patterns and combinations at will; these patterns
+    will hold true for all instances and variations of the classes. So, for instance, the Length
+    base class could define:
+    
+        unitCombiner.register_mul(Length, Length, Area)
+        unitCombiner.register_mul(Length, Area, Volume)
+        
+    These two definitions make it possible to dimensionally shift a length into an Area (1d to 2d),
+    and multiple Lengths or a Length and an Area into a Volume (1d x3 or 1d x 2d to 3d). The multiplication
+    definitions are commutative, so the following two definitions are redundant:
+        
+        unitCombiner.register_mul(Length, Area, Volume)
+        unitCombiner.register_mul(Area, Length, Volume)
+    
+    When determining how to combine to types, the multiplication code searches both combinations to find
+    and appropriate pattern.
+    
+    The division definitions are non-commutative, so the following definition:
+        
+        unitCombiner.register_div(Area, Length, Length)
+    
+    defines how to divide an Area by a Length to create a Length. This pattern does not apply when dividing
+    a Length by an Area (no applicable unit).
+    
+    The exponentiation logic (*_pow) defines patterns for raising units to different powers. Each base type
+    can be given any number of distinct valid powers:
+    
+        unitCombiner.register_pow(Length, 2, Area)
+        unitCombiner.register_pow(Length, 3, Volume)
+    """
+    def __init__(self):
+        self._dim_mul = {}
+        self._dim_pow = {}
+        self._dim_div = {}
+    
+    def register_mul(self, left_class, right_class, result_class):
+        """
+        Create a new multiplication pattern using two base Measurement classes. Multiplication definitions
+        are commutative; only a single combination of two distinct Measurement classes need be defined, the
+        multiplication logic will attempt to find an applicable pattern using both Left/Right and Right/Left
+        combinations.
             
-            return numerator.reconstruct(copy = numerator, scale = numerator.scale * (other.scale * other.fromBaseUnit))
+            # define how two lengths combine into an Area
+            unitCombiner.register_mul(Length, Length, Area)
+        
+        """
+        pass
+    
+    def register_div(self, lop, rop, res):
+        """
+        Create a new division pattern using two base Measurement classes. Division definitions are
+        non-commutative;
+            
+            Area / Length
+        
+        is not the same as:
+            
+            Length / Area
+        
+        For that reason definitions of unit combinations must be explicit for the desired syntactic ordering
+        of Measurements:
+            
+            # Convert an Area into a Length by division using Length
+            unitCombiner.register_div(Area, Length, Length)
+            
+            # Convert a Volume to a Length by division using Area
+            unitCombiner.register_div(Volume, Area, Length)
+        """
+        pass
+    
+    def register_pow(self, lop, scale):
+        """
+        """
+        pass
 
 class Measurement(object):
     """
@@ -399,20 +431,28 @@ class Measurement(object):
                 return (self.scale / other.scale)
             elif self.scale is not None and other.scale is not None:
                 # create a compound unit, but we need to reduce the num/denom
-                return CompoundMeasurement(
-                    measurements = [
-                        self.reconstruct(copy = self, scale = self.scale / other.scale),
-                        other.reconstruct(copy = other, scale = 1)
-                    ]
-                )
+                
+                # handled by UnitCombiner singleton
+#                return CompoundMeasurement(
+#                    measurements = [
+#                        self.reconstruct(copy = self, scale = self.scale / other.scale),
+#                        other.reconstruct(copy = other, scale = 1)
+#                    ]
+#                )
+                pass
+            
             elif self.scale is not None and other.scale is None:
-                # create a simple compound unit
-                return CompoundMeasurement(
-                    measurements = [
-                        self.reconstruct(copy = self, scale = self.scale),
-                        other.reconstruct(copy = other, scale = 1)
-                    ]
-                )
+                
+                # handled by UnitCombiner singleton
+#                
+#                # create a simple compound unit
+#                return CompoundMeasurement(
+#                    measurements = [
+#                        self.reconstruct(copy = self, scale = self.scale),
+#                        other.reconstruct(copy = other, scale = 1)
+#                    ]
+#                )
+                pass
 
     
     """

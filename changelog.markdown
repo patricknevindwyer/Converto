@@ -2,6 +2,13 @@ This changelog is an approximate catalog of syntax changes, new features, and bu
 
 Changes
 =======
+_2010.11.23_
+*	Created UnitCombiner class to handle dimensional conversions, rather than per-class definitions
+*	added UnitCombiner handlers
+	*	register_mul	-	commutative multiplication of units
+	*	register_div	-	non-commutative division of units
+	*	register_pow	-	exponent scaled dimensional shift
+	
 _2010.11.20_
 *	Added dimensional_mul and dimensional_pow to Measurement base class
 *	Added Area Measurement
