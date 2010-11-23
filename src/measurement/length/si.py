@@ -1,31 +1,13 @@
 '''
-Created on Nov 4, 2010
+Created on Nov 23, 2010
 
 @author: patricknevindwyer
+
+Definitions for Metric/SI Length measurements. All SI measurement units
+are linked for up/down scaling. These measurements stretch from yoctometers
+to yottameters.
 '''
 from measurement.bases import Length
-         
-###
-# IMPERIAL UNITS
-###
-miles = Length(
-    toBaseUnit = 1609.344,
-    fromBaseUnit = 0.000621371192,
-    suffixes = ('mile', 'miles')
-)
-
-feet = Length(
-    toBaseUnit = 0.3048,
-    fromBaseUnit = 3.2808399,
-    suffixes = ('foot','feet') 
-)
-
-miles.setSequenceUnits(down = feet)
-feet.setSequenceUnits(up = miles)
-
-###
-# METRIC UNITS
-###
 
 yottameters = Length(
     toBaseUnit = 1000000000000000000000000.0,
@@ -174,13 +156,3 @@ femtometers.setSequenceUnits(up = picometers, down = attometers)
 attometers.setSequenceUnits(up = femtometers, down = zeptometers)
 zeptometers.setSequenceUnits(up = attometers, down = yoctometers)
 yoctometers.setSequenceUnits(up = zeptometers)
-
-###
-# ESOTERIC UNITS
-###
-furlongs = Length(
-    unit = 'furlong',
-    toBaseUnit = 201.16800,
-    fromBaseUnit = 0.00497096954,
-    suffixes = ('furlong', 'furlongs')
-)
