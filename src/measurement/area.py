@@ -3,7 +3,7 @@ Created on Nov 20, 2010
 
 @author: patricknevindwyer
 '''
-from converto import Measurement
+from measurement import Measurement
 
 class Area(Measurement):
     """

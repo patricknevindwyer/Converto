@@ -3,8 +3,8 @@ Created on Nov 4, 2010
 
 @author: patricknevindwyer
 '''
-from converto import Measurement
-from converto.area import square_meters
+from measurement import Measurement
+from measurement.area import square_meters
 
 class Length(Measurement):
     """

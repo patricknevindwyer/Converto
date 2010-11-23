@@ -3,7 +3,7 @@ Created on Nov 18, 2010
 
 @author: patricknevindwyer
 '''
-from converto import Measurement
+from measurement import Measurement
 
 class Storage(Measurement):
     """
