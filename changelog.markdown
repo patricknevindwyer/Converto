@@ -12,6 +12,7 @@ _2010.11.23_
 *	Added measurement.bases class to contain all common measurement base types (Length, Time, etc)
 *	Refactored base Measurement classes out of measurement.(types) and into measurement.bases
 *	Removed conversion test cases
+*	Refactored length measurements into sub-modules of SI, Imperial, and Esoteric
 
 _2010.11.20_
 *	Added dimensional_mul and dimensional_pow to Measurement base class
