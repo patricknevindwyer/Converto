@@ -9,6 +9,7 @@ _2010.12.03_
 *	Refactored Measurement, UnitCombiner, and Error classes to _measurement.core_
 *	Organized all base imports in _measurement_
 *	Refactored Area measurements to new module, breaking out SI and Imperial units
+*	Refactored Storage measurements to new module, breaking out IEC and SI units
 
 _2010.11.23_
 *	Created UnitCombiner class to handle dimensional conversions, rather than per-class definitions
