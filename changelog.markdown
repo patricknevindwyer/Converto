@@ -10,6 +10,9 @@ _2010.12.03_
 *	Organized all base imports in _measurement_
 *	Refactored Area measurements to new module, breaking out SI and Imperial units
 *	Refactored Storage measurements to new module, breaking out IEC and SI units
+*	Refactored Time measurements to new module
+*	Expanded SI Time measurements, added sequenceUnits for all SI time measurements
+*	Expanded SI Time to include Gregorian, SI, Julian, and Esoteric units
 
 _2010.11.23_
 *	Created UnitCombiner class to handle dimensional conversions, rather than per-class definitions
