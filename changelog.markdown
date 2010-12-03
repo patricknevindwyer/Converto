@@ -2,6 +2,11 @@ This changelog is an approximate catalog of syntax changes, new features, and bu
 
 Changes
 =======
+_2010.12.03_
+*	Added _compute_pow_ method to UnitCombiner
+*	Added __pow__ override to Measurement class
+*	Added _Length_ ** 2 -> Area
+ 
 _2010.11.23_
 *	Created UnitCombiner class to handle dimensional conversions, rather than per-class definitions
 *	added UnitCombiner handlers

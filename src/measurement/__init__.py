@@ -170,6 +170,17 @@ class UnitCombiner(object):
         unitTuple = (base_class, exponent)
         self._dim_pow[unitTuple] = {'unit': result_measurement}
 
+    def compute_pow(self, base, exp):
+        """
+        Given a measurement and an exponent, find the proper exponentiation
+        """
+        unitTuple = (base.__class__, exp)
+        
+        if unitTuple not in self._dim_pow:
+            raise MeasurementError("Cannot raise %s to the %i power" % (base.__class__, exp))
+        else:
+            return self._dim_pow[unitTuple]['unit'] * (base.scale ** exp)
+    
 class Measurement(object):
     """
     Description of a measurement.
@@ -605,4 +616,15 @@ class Measurement(object):
 #                else:
 #                    return retVal
                 
+    def __pow__(self, other):
+        """
+        Taking a Measurement with a scale to a given power. This is handled exclusively by the
+        UnitCombiner singleton.
+        """
+        
+        if self.scale is not None and (type(other) == types.IntType or type(other) == types.FloatType):
+            return unitCombiner.compute_pow(self, other)
+        else:
+            raise ConversionError( "Invalid dimensional exponentiation (scale: %s, exponent: %s)" % (str(self.scale), str(other)))
+
 unitCombiner = UnitCombiner()
