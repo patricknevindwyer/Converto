@@ -6,6 +6,8 @@ _2010.12.03_
 *	Added _compute_pow_ method to UnitCombiner
 *	Added __pow__ override to Measurement class
 *	Added _Length_ ** 2 -> Area
+*	Refactored Measurement, UnitCombiner, and Error classes to _measurement.core_
+*	Organized all base imports in _measurement_
  
 _2010.11.23_
 *	Created UnitCombiner class to handle dimensional conversions, rather than per-class definitions

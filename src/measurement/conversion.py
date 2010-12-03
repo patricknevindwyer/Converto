@@ -7,7 +7,7 @@ All conversions are grouped by the target Measurement, so, for instance, all con
 that result in Area are grouped together.
 '''
 from measurement.bases import Area, Length
-from measurement import unitCombiner as uc
+from measurement.core import unitCombiner as uc
 
 from measurement.area import square_meters
 from measurement.length.si import meters
