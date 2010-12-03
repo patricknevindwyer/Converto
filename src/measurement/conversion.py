@@ -9,7 +9,7 @@ that result in Area are grouped together.
 from measurement.bases import Area, Length
 from measurement.core import unitCombiner as uc
 
-from measurement.area import square_meters
+from measurement.area.si import square_meters
 from measurement.length.si import meters
 
 
